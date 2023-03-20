@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   Image,
@@ -18,9 +18,13 @@ import { CustomTextInput } from "../../components/CustomTextInput";
 import styles from "./Styles";
 
 export const HomeScreen = () => {
-  const { dni, password, onChange } = useViewModel();
+  const { dni, password, onChange, login, errorMessage } = useViewModel();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
+  useEffect(() => {
+    if (errorMessage !== "") {
+      ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+    }
+  }, [errorMessage]);
   return (
     // COLUMN
     <View style={styles.container}>
@@ -58,13 +62,7 @@ export const HomeScreen = () => {
         />
 
         <View style={{ marginTop: 30 }}>
-          <RoundedButton
-            text="Ingresar"
-            onPress={() => {
-              console.log("Dni: " + dni);
-              console.log("Password: " + password);
-            }}
-          />
+          <RoundedButton text="Ingresar" onPress={() => login()} />
         </View>
         <View style={styles.formPassword}>
           <Text>Olvido su Password ?</Text>

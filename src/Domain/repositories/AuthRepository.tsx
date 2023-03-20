@@ -2,5 +2,7 @@ import { ResponseAPIAmistApp } from "../../Data/sources/remote/models/ResponseAp
 
 export interface AuthRepository{
 
+    login(dni:string, password:string): Promise<ResponseAPIAmistApp>
+
     resetPasswordEmail(email: string) : Promise<ResponseAPIAmistApp>
 }
