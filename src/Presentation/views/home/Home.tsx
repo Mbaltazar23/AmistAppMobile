@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import {
   Image,
-  StyleSheet,
   Text,
-  TextInput,
   ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import { RoundedButton } from "../../components/RoundedButton";
 import { RootStackParamList } from "../../../../App";
 import DNIInput from "../../components/DniInput";
@@ -17,14 +14,21 @@ import useViewModel from "./ViewModel";
 import { CustomTextInput } from "../../components/CustomTextInput";
 import styles from "./Styles";
 
-export const HomeScreen = () => {
-  const { dni, password, onChange, login, errorMessage } = useViewModel();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+interface Props extends StackScreenProps<RootStackParamList, "HomeScreen"> {}
+
+export const HomeScreen = ({ navigation, route }: Props) => {
+  const { dni, password, onChange, login, errorMessage, user } = useViewModel();
   useEffect(() => {
     if (errorMessage !== "") {
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
     }
   }, [errorMessage]);
+
+  useEffect(() => {
+    if (user?.id !== null && user?.id !== undefined) {
+      navigation.replace("ProfileInfoScreen");
+    }
+  }, [user]);
   return (
     // COLUMN
     <View style={styles.container}>

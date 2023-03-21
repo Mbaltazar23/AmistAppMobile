@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { LoginAuthUseCase } from "../../../Domain/useCases/auth/LoginAuth";
+import { SaveUserLocalUseCase } from "../../../Domain/useCases/userLocal/SaveUserLocal";
+import { useUserLocal } from "../../hooks/useUserLocal";
 
 const HomeViewModel = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -7,6 +9,8 @@ const HomeViewModel = () => {
     dni: "",
     password: "",
   });
+  const { user, getUserSession } = useUserLocal();
+  console.log("Usuario en Sesion : " + JSON.stringify(user));
 
   const login = async () => {
     if (isValidForm()) {
@@ -14,6 +18,9 @@ const HomeViewModel = () => {
       console.log("response : " + JSON.stringify(response));
       if (!response.status) {
         setErrorMessage(response.msg);
+      }else{
+        await SaveUserLocalUseCase(response.data);
+		getUserSession();
       }
     }
   };
@@ -35,6 +42,7 @@ const HomeViewModel = () => {
   };
   return {
     ...values,
+    user,
     onChange,
     errorMessage,
     login,
